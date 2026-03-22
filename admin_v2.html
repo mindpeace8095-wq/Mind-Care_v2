@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 대시보드 - Mind Care</title>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Inline styles specific to admin_v2 if not fully covered in style.css -->
+    <style>
+        .admin-page-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .back-to-main {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-to-main:hover {
+            color: #667eea;
+        }
+
+        .high-risk {
+            color: #e53e3e !important;
+            font-weight: 700;
+        }
+
+        /* Room Row Colors */
+        .ward-male {
+            background-color: #e6f2ff !important;
+            /* 연한 파란색 */
+        }
+
+        .ward-female {
+            background-color: #ffe6e6 !important;
+            /* 연한 분홍색 */
+        }
+
+        /* Filter Container */
+        .filter-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 15px;
+        }
+
+        .filter-container select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e0;
+            outline: none;
+            font-size: 0.95rem;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Admin Password Modal (Shown immediately on load) -->
+    <div id="admin-auth-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <h3>관리자 페이지 진입</h3>
+            <p>관리자 비밀번호를 입력해주세요.</p>
+            <input type="password" id="admin-password" placeholder="비밀번호 입력">
+            <div class="modal-actions">
+                <!-- Redirects back to main page -->
+                <button id="cancel-admin-btn" class="secondary-btn">취소</button>
+                <button id="verify-admin-btn" class="primary-btn">확인</button>
+            </div>
+            <p id="admin-error-msg" class="error-msg hidden">비밀번호가 일치하지 않습니다.</p>
+        </div>
+    </div>
+
+    <!-- Dashboard Content (Hidden by default until auth) -->
+    <div id="dashboard-content" class="glass-container dashboard-panel hidden"
+        style="max-width: 95%; max-height: 95vh; padding: 25px;">
+        <div class="admin-page-container">
+            <div class="header-actions">
+                <a href="main_v2.html?logout=true" class="back-to-main">← 메인으로 돌아가기</a>
+                <h2 style="color: #2c3e50; font-size: 1.8rem; flex-grow: 1; text-align: center;">실시간 현황 대시보드</h2>
+
+                <div class="filter-container">
+                    <label for="dashboard-filter" style="font-weight: 600; color: #4a5568;">표시 필터:</label>
+                    <select id="dashboard-filter">
+                        <option value="all">전체 목록 (All)</option>
+                        <option value="general">일반실 (General)</option>
+                        <option value="open">개방실/공용PC (Open PC)</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button id="reset-all-btn" class="secondary-btn"
+                        style="padding: 10px 20px; font-size: 1rem; flex-shrink: 0; color: #e53e3e; border-color: #feb2b2;">전체
+                        데이터 초기화 (RESET)</button>
+                    <button id="csv-download-btn" class="primary-btn"
+                        style="padding: 10px 20px; font-size: 1rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);">상담
+                        기록 다운로드(CSV)</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Table -->
+            <div class="table-container" style="max-height: calc(95vh - 120px);">
+                <table id="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>보호실 번호</th>
+                            <th>이름</th>
+                            <th>국적</th>
+                            <th>성별</th>
+                            <th>날짜</th>
+                            <th>예약일</th>
+                            <th>위험군</th>
+                            <th>만족도(UX)</th>
+                            <th>대화내역</th>
+                            <th>총점</th>
+                            <th>관리</th>
+                            <th title="우울/흥미상실(Q1)">Q1</th>
+                            <th title="불안(Q2)">Q2</th>
+                            <th title="충동/공격성(Q3)">Q3</th>
+                            <th title="수면장애(Q4)">Q4</th>
+                            <th title="조증/과잉행동(Q5)">Q5</th>
+                            <th title="조현/망상(Q6)">Q6</th>
+                            <th title="트라우마(Q7)">Q7</th>
+                            <th title="자살사고(Q8)">Q8</th>
+                            <th title="알코올의존(Q9)">Q9</th>
+                            <th title="자기관리저하(Q10)">Q10</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboard-tbody">
+                        <!-- Data rows will be injected here by admin.js -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="loading-indicator" style="text-align: center; color: #5a6c7d; padding: 20px; font-weight: 500;">
+                데이터를 불러오는 중입니다...
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Care</title>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+
+<body>
+    <div class="glass-container">
+
+        <!-- Language Selection (2 Rows, 4 Cols) -->
+        <section class="language-selection">
+            <div dir="ltr" class="lang-grid">
+                <button class="lang-btn active" data-lang="ko">한국어</button>
+                <button class="lang-btn" data-lang="en">English</button>
+                <button class="lang-btn" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="vi">Tiếng Việt</button>
+                <button class="lang-btn" data-lang="ar">العربية</button>
+                <button class="lang-btn" data-lang="th">ภาษาไทย</button>
+                <button class="lang-btn" data-lang="ru">Русский</button>
+                <button class="lang-btn" data-lang="uz">O'zbekcha</button>
+            </div>
+        </section>
+
+        <header>
+            <h1 data-i18n="title">Mind Care</h1>
+            <p data-i18n="subtitle">당신의 마음을 돌보는 공간</p>
+        </header>
+
+        <main>
+            <form id="consultation-form" novalidate>
+                <!-- Initial Room Setup Modal/Section (Injected via JS or inline here) -->
+                <!-- We enclose the entire original form inside a wrapper so we can hide/show it based on Room Setup -->
+                <div id="room-setup-section" class="setup-section">
+                    <h2 data-i18n="roomSetupTitle"
+                        style="text-align: center; margin-bottom: 20px; font-size: 1.3rem; color: #2c3e50;">기기 위치 설정
+                    </h2>
+
+                    <div class="input-group">
+                        <label data-i18n="wardSelectLabel">보호실 선택</label>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="secondary-btn ward-btn" data-ward="male"
+                                data-i18n="maleWard">남자 보호실</button>
+                            <button type="button" class="secondary-btn ward-btn" data-ward="female"
+                                data-i18n="femaleWard">여자 보호실</button>
+                        </div>
+                    </div>
+
+                    <div class="input-group hidden" id="room-number-group">
+                        <label for="room-select" data-i18n="roomNumberLabel">보호실 번호</label>
+                        <select id="room-select">
+                            <option value="" disabled selected>선택해주세요</option>
+                            <!-- Dynamically populated by JS -->
+                        </select>
+                    </div>
+
+                    <div class="input-group hidden" id="remember-device-group">
+                        <label class="consent-checkbox-label">
+                            <input type="checkbox" id="remember-device-checkbox">
+                            <span class="custom-checkbox"></span>
+                            <span class="consent-text" style="font-weight: 600; color: #4a5568;">이 기기 기억하기 (다음부터 묻지
+                                않음)</span>
+                        </label>
+                        <p style="font-size: 0.85rem; color: #718096; margin-top: 5px; padding-left: 34px;">개방실/공용 PC는
+                            보안을 위해 이 기능을 사용할 수 없습니다.</p>
+                    </div>
+
+                    <button type="button" class="submit-btn hidden" id="confirm-room-btn">설정 완료 및 시작하기</button>
+                </div>
+
+                <div id="actual-form-section" class="hidden">
+                    <!-- Name (Masked Input) -->
+                    <div class="input-group">
+                        <label for="real-name-input" data-i18n="nameLabel">이름</label>
+                        <div class="name-input-container">
+                            <input type="text" id="real-name-input" data-i18n-placeholder="namePlaceholder"
+                                placeholder="이름을 입력하세요" autocomplete="off" required>
+                            <div id="name-mask-display"></div>
+                        </div>
+                    </div>
+
+                    <!-- Gender Dropdown -->
+                    <div class="input-group">
+                        <label for="gender-select">성별 (Gender)</label>
+                        <select id="gender-select" required>
+                            <option value="" disabled selected>선택해주세요</option>
+                            <option value="남성">남성 (Male)</option>
+                            <option value="여성">여성 (Female)</option>
+                            <option value="기타">기타 (Other)</option>
+                        </select>
+                    </div>
+
+                    <!-- Nationality Dropdown -->
+                    <div class="input-group">
+                        <label for="nationality-select" data-i18n="natLabel">국적</label>
+                        <select id="nationality-select" required>
+                            <option value="" disabled selected data-i18n="natPlaceholder">국적을 선택해주세요</option>
+                            <option value="CN" data-i18n="natChina">중국</option>
+                            <option value="RU" data-i18n="natRussia">러시아</option>
+                            <option value="TH" data-i18n="natThailand">태국</option>
+                            <option value="VN" data-i18n="natVietnam">베트남</option>
+                            <option value="UZ" data-i18n="natUzbekistan">우즈베키스탄</option>
+                            <option value="KZ" data-i18n="natKazakhstan">카자흐스탄</option>
+                            <option value="PH" data-i18n="natPhilippines">필리핀</option>
+                            <option value="OTHER" data-i18n="natOther">기타</option>
+                        </select>
+                    </div>
+
+                    <!-- Consents section -->
+                    <div class="consent-section">
+                        <h2 data-i18n="consentTitle">이용 동의</h2>
+
+                        <label class="consent-checkbox-label">
+                            <input type="checkbox" id="consent-1" required>
+                            <span class="custom-checkbox"></span>
+                            <span class="consent-text" data-i18n="consent1">본 데이터는 익명 처리되어 서비스 개선 및 학술 연구(IRB) 목적으로만
+                                사용됩니다.</span>
+                        </label>
+
+                        <label class="consent-checkbox-label">
+                            <input type="checkbox" id="consent-2" required>
+                            <span class="custom-checkbox"></span>
+                            <span class="consent-text" data-i18n="consent2">수집 정보는 암호화되며, 본인 동의 없이 외부에 공유되지 않습니다.</span>
+                        </label>
+
+                        <label class="consent-checkbox-label">
+                            <input type="checkbox" id="consent-3" required>
+                            <span class="custom-checkbox"></span>
+                            <span class="consent-text" data-i18n="consent3">동의 여부와 상관없이 서비스 이용이 가능하며 설정에서 언제든 철회할 수
+                                있습니다.</span>
+                        </label>
+                    </div>
+
+                    <div id="error-message" class="error-msg hidden" data-i18n="consentError">모든 필수 항목에 동의해주세요.</div>
+
+                    <button type="submit" class="submit-btn" id="submit-btn" data-i18n="confirmBtn">확인</button>
+                </div> <!-- End of actual-form-section -->
+            </form>
+
+            <section id="screening-section" class="assessment-container hidden" style="display: none;">
+                <h2 data-i18n="screeningTitle" class="assessment-title">SCREENING</h2>
+                <div class="screening-subtitle-wrapper">
+                    <p data-i18n="screeningSubtitle" class="screening-subtitle"></p>
+                    <button type="button" id="instruction-speaker-btn" class="speaker-btn instruction-speaker hidden">🔊</button>
+                </div>
+                <div id="questions-list">
+                    <!-- Rendered dynamically by JS -->
+                </div>
+                <button type="button" class="submit-btn" id="screening-submit-btn" data-i18n="finishBtn">제출하기</button>
+            </section>
+
+            <!-- Result & Booking Options -->
+            <section id="result-section" class="result-container hidden">
+                <h2 data-i18n="resultTitle">결과 제출 완료</h2>
+                
+                <p data-i18n="resultDesc" class="result-desc">평가가 성공적으로 제출되었습니다.</p>
+                
+                <!-- YouTube Video Container for High Risk -->
+                <div id="youtube-video-container" class="hidden" style="margin: 25px 0; text-align: center; position: relative; z-index: 9999; display: block !important; min-height: 400px !important;">
+                    <p id="youtube-video-phrase" style="font-size: 1.1rem; font-weight: 500; color: #4a5568; margin-bottom: 15px; line-height: 1.5; z-index: 10000; position: relative;"></p>
+                    <div id="yt-player-wrapper" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10000;">
+                        <!-- IFrame injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Dynamic Stability Guide Card -->
+                <div id="stability-guide" class="stability-card hidden" style="text-align: left; padding: 25px;">
+                    <h3 id="stability-title" class="stability-title" style="margin-bottom: 15px; text-align: center;"></h3>
+                    <p id="stability-desc" class="stability-desc-text" style="font-size: 1.05rem; line-height: 1.6; color: #4a5568; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px;"></p>
+                </div>
+
+                <div class="result-actions">
+                    <button type="button" class="help-btn hidden" id="help-btn" data-i18n="helpBtnText">심리상담사에게 도움 요청하기 (HELP)</button>
+                    <button type="button" class="primary-btn" id="show-booking-btn" data-i18n="bookBtn">상담 예약하기</button>
+                    <button type="button" class="secondary-btn" id="talk-btn" data-i18n="talkBtn">마음이와 대화하기</button>
+                </div>
+
+                <!-- User Experience Feedback -->
+                <div id="feedback-section" class="feedback-container hidden">
+                    <h3 data-i18n="feedbackTitle" class="feedback-title">오늘 마음 돌봄이 도움이 되었나요?</h3>
+                    <div class="feedback-emojis">
+                        <button type="button" class="emoji-btn" data-value="🤩" title="매우 도움됨">🤩</button>
+                        <button type="button" class="emoji-btn" data-value="🙂" title="보통">🙂</button>
+                        <button type="button" class="emoji-btn" data-value="😶" title="그저 그럼">😶</button>
+                    </div>
+                    <p id="feedback-thanks" class="feedback-thanks hidden" data-i18n="feedbackThanks">평가해주셔서 감사합니다. 당신의 소중한 의견이 더 나은 마인드 케어를 만듭니다.</p>
+                    <p data-i18n="feedbackAnon" class="feedback-anon">이 평가는 익명으로 처리되며 오직 서비스 개선을 위해서만 사용됩니다.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Hidden Admin Entrance -->
+        <div id="secret-admin-trigger" class="admin-link">Admin</div>
+    </div>
+
+    <!-- Booking Schedule Modal -->
+    <div id="booking-modal" class="modal hidden">
+        <div class="modal-content glass-panel booking-panel">
+            <h3 data-i18n="bookingTitle">상담 예약 (오후 2시)</h3>
+            <p data-i18n="bookingDesc" class="booking-desc">상담을 원하는 요일을 선택해주세요.</p>
+            <div id="booking-days-container" class="booking-days">
+                <!-- Dynamically populated by JS (Mon, Tue, Thu, Fri) -->
+            </div>
+            <div class="modal-actions">
+                <button id="close-booking-btn" class="secondary-btn" data-i18n="closeBtn">닫기</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Chatbot "Maeum-i" Widget -->
+    <div id="chat-widget" class="hidden">
+        <div class="chat-header">
+            <span class="chat-title" data-i18n="chatTitle">마음이</span>
+            <button id="close-chat-btn">&times;</button>
+        </div>
+        <div class="chat-body" id="chat-messages">
+            <!-- Messages go here -->
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" data-i18n-placeholder="chatInputHint" placeholder="메시지를 입력하세요...">
+            <button id="send-chat-btn">➔</button>
+        </div>
+    </div>
+    <button id="chatbot-trigger" class="chatbot-fab" title="Chat with Maeum-i">❤️</button>
+
+    <!-- Toast message for success visually -->
+    <div id="toast-message" class="hidden">Saved successfully!</div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then((reg) => console.log('Service Worker registered.', reg))
+                    .catch((err) => console.log('Service Worker registration failed.', err));
+            });
+        }
+    </script>
+</body>
+
+</html>

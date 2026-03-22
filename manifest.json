@@ -1,0 +1,21 @@
+{
+  "name": "MindCare",
+  "short_name": "MindCare",
+  "description": "당신의 마음을 돌보는 공간 - Mind Care",
+  "start_url": "main_v2.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "icons": [
+    {
+      "src": "mindcare_icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "mindcare_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
