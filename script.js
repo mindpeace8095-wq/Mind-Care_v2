@@ -1701,7 +1701,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show '전송 완료' message via alert as requested by user
             alert(translations[currentLangCode]?.resultDesc || "전송 완료되었습니다.");
 
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbyttRDsXe90vE5CSSmJZ3p1PYYCDSSb7UrOTgb1u6IUaljw97QU9vAKhdFwo6EMRCS8/exec';
 
             if (navigator.onLine) {
                 fetch(scriptUrl, {
