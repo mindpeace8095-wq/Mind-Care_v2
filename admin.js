@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentDashboardData = []; // Store data for filtering
 
     const ADMIN_PASSWORD = '1305';
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx_YOUR_DUMMY_GAS_ID/exec'; // Replace with real URL later
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec'; // Replace with real URL later
 
     // 1. Password Protection Logic
     const handleAuth = () => {
@@ -60,15 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingIndicator.style.display = 'block';
             tableContainer.style.display = 'none';
 
-            // Attempt to fetch from Google Apps Script (Requirement 1)
-            // Note: In real environment, CORS must be configured on GAS.
-            // For now, we simulate fetching, and fallback to localStorage if it fails or returns HTML instead of JSON.
             let rawData = [];
 
             try {
-                // If the URL is just a dummy, this fetch might fail or return CORS error.
-                // It's in a try-catch to safely fallback to localStorage.
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                // Fetch from GAS with Cache Busting
+                const cacheBustUrl = `${GOOGLE_SCRIPT_URL}${GOOGLE_SCRIPT_URL.includes('?') ? '&' : '?'}t=${new Date().getTime()}`;
+                const response = await fetch(cacheBustUrl, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
@@ -84,22 +81,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error("GAS response not OK");
                 }
             } catch (fetchError) {
-                console.warn('Network fetch from GAS failed or blocked by CORS. Falling back to localStorage data.', fetchError);
-                // Fallback to localStorage for demonstration
+                console.warn('Network fetch from GAS failed. Falling back to local storage.', fetchError);
+                // Fallback to local storage
                 const localData = localStorage.getItem('mindcare_records');
                 if (localData) {
                     rawData = JSON.parse(localData);
                 }
             }
 
+            // Map data to consistent timestamp format for delete operation mapping
             currentDashboardData = rawData.map(r => {
-                if (!r.timestamp) r.timestamp = new Date(r.date).getTime() + Math.random(); 
+                if (!r.timestamp) {
+                    // Try to generate unique-ish timestamp if missing
+                    r.timestamp = r.date ? new Date(r.date).getTime() : new Date().getTime();
+                }
                 return r;
             });
             renderTable(currentDashboardData);
 
         } catch (error) {
-            console.error("Error loading dashboard data:", error);
+            console.error("Dashboard load failed:", error);
             loadingIndicator.textContent = "데이터를 불러오는 중 오류가 발생했습니다.";
         } finally {
             loadingIndicator.style.display = 'none';
@@ -182,28 +183,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const filterValue = dashboardFilter ? dashboardFilter.value : 'all';
 
         const rowsHtml = data.map(row => {
-            // Identify high risk
-            const ans = row.answers || {};
-            const score = parseInt(row.total) || 0;
-            const q3 = parseInt(ans.q3) || 0;
-            const q6 = parseInt(ans.q6) || 0;
-            const q8 = parseInt(ans.q8) || 0;
+            // Columns mapping from GAS / Unified Record
+            const roomVal = row.roomNumber || row.room || '-';
+            const score = parseInt(row.totalScore) || parseInt(row.total) || 0;
+            const q3 = parseInt(row.q3) || 0;
+            const q6 = parseInt(row.q6) || 0;
+            const q8 = parseInt(row.q8) || 0;
 
             let isHighRiskRow = false;
-            let riskLevelText = row.risk || '안정';
+            let riskLevelText = row.riskLevel || row.risk || '안정';
 
             if (score >= 42 || q3 >= 4 || q6 >= 4 || q8 >= 4) {
                 isHighRiskRow = true;
-                if (riskLevelText !== '고위험') riskLevelText = '고위험';
+                if (!riskLevelText.includes('고위험')) riskLevelText = '고위험' + (riskLevelText === '안정' ? '' : ` (${riskLevelText})`);
             }
 
-            // Room Setup Logic
-            let roomStr = String(row.room || '').trim();
+            // Room Setup logic
+            let roomStr = String(roomVal).trim();
             let roomType = 'general';
             let wardClass = '';
-            let roomDisplay = roomStr || '-';
+            let roomDisplay = roomStr;
 
-            // Determine Room Unit and Type
             if (roomStr.startsWith('3')) {
                 wardClass = 'ward-male';
                 if (['304', '305', '306', '307'].includes(roomStr)) roomType = 'open';
@@ -212,32 +212,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (['405', '406', '407', '408'].includes(roomStr)) roomType = 'open';
             }
 
-            // Apply filter logic
-            if (filterValue !== 'all' && filterValue !== roomType) {
-                return ''; // Standard map returning empty string for filtered rows
-            }
+            if (filterValue !== 'all' && filterValue !== roomType) return '';
 
             if (roomType === 'open') {
                 roomDisplay += ' <span style="font-size: 0.8rem; background: #e2e8f0; padding: 2px 4px; border-radius: 4px; color: #4a5568;">[공용 PC]</span>';
             }
 
             const riskStyleAttr = isHighRiskRow ? 'class="high-risk"' : '';
+            const chatLogStr = encodeURIComponent(row.chatSummary || row.chatLog || '');
+            const hasChat = (row.chatSummary || row.chatLog);
 
-            // Chat View Button Logic
-            const chatLogStr = encodeURIComponent(row.chatLog || '');
-            const chatBtnHtml = row.chatLog 
+            const chatBtnHtml = hasChat 
                 ? `<button class="primary-btn" style="padding: 4px 8px; font-size: 0.8rem; background: #4a5568; border: none; border-radius: 4px; color: white; cursor: pointer;" onclick="viewChatLog('${chatLogStr}')">내용 보기</button>` 
                 : '<span style="color: #a0aec0; font-size: 0.85rem;">대화 없음</span>';
 
-            // Columns needed: Room No | Name | Nat | Gender | Date | Booking | Risk | Sat | Chat | Total | Q1-Q10
             return `
                 <tr class="${wardClass}">
                     <td style="font-weight: bold;">${roomDisplay}</td>
                     <td>${row.name || '-'}</td>
-                    <td>${row.nationality || '-'}</td>
+                    <td>${row.country || row.nationality || '-'}</td>
                     <td>${row.gender || '-'}</td>
-                    <td>${row.date || '-'}</td>
-                    <td>${row.booking || '-'}</td>
+                    <td>${row.date ? new Date(row.date).toLocaleDateString() : '-'}</td>
+                    <td>${row.reservationDate || row.booking || '-'}</td>
                     <td ${riskStyleAttr}>${riskLevelText}</td>
                     <td style="font-size: 1.2rem;">${row.satisfaction || '-'}</td>
                     <td>${chatBtnHtml}</td>
@@ -248,16 +244,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             삭제
                         </button>
                     </td>
-                    <td>${ans.q1 || '-'}</td>
-                    <td>${ans.q2 || '-'}</td>
-                    <td style="${q3 >= 4 ? 'color: red; font-weight: bold;' : ''}">${ans.q3 || '-'}</td>
-                    <td>${ans.q4 || '-'}</td>
-                    <td>${ans.q5 || '-'}</td>
-                    <td style="${q6 >= 4 ? 'color: red; font-weight: bold;' : ''}">${ans.q6 || '-'}</td>
-                    <td>${ans.q7 || '-'}</td>
-                    <td style="${q8 >= 4 ? 'color: red; font-weight: bold;' : ''}">${ans.q8 || '-'}</td>
-                    <td>${ans.q9 || '-'}</td>
-                    <td>${ans.q10 || '-'}</td>
+                    <td>${row.q1 || '-'}</td>
+                    <td>${row.q2 || '-'}</td>
+                    <td style="${q3 >= 4 ? 'color: red; font-weight: bold;' : ''}">${row.q3 || '-'}</td>
+                    <td>${row.q4 || '-'}</td>
+                    <td>${row.q5 || '-'}</td>
+                    <td style="${q6 >= 4 ? 'color: red; font-weight: bold;' : ''}">${row.q6 || '-'}</td>
+                    <td>${row.q7 || '-'}</td>
+                    <td style="${q8 >= 4 ? 'color: red; font-weight: bold;' : ''}">${row.q8 || '-'}</td>
+                    <td>${row.q9 || '-'}</td>
+                    <td>${row.q10 || '-'}</td>
                 </tr>
             `;
         }).join('');
@@ -273,44 +269,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. CSV Export Logic (Requirement 3)
     csvDownloadBtn.addEventListener('click', () => {
-        // Try getting latest from localStorage or re-parse from DOM. We'll use localStorage to ensure raw data fidelity for now.
-        const data = JSON.parse(localStorage.getItem('mindcare_records') || '[]');
-        if (data.length === 0) {
+        if (currentDashboardData.length === 0) {
             alert("다운로드할 데이터가 없습니다.");
             return;
         }
 
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // UTF-8 BOM helps excel read Korean properly
-        // Header
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // UTF-8 BOM
         csvContent += "날짜,이름,국적,성별,보호실번호,예약요일,위험군,만족도기호,대화내역유무,심리총점,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10\n";
 
-        // Rows
-        data.forEach(r => {
-            const ans = r.answers || {};
-            const chatIncluded = r.chatLog ? 'Yes' : 'No';
-            // Formatting exact array. Ensure no commas inside values to prevent breaking columns.
+        currentDashboardData.forEach(r => {
+            const chatIncluded = (r.chatSummary || r.chatLog) ? 'Yes' : 'No';
             const rowArr = [
                 r.date || '',
                 (r.name || '').replace(/,/g, ''),
-                r.nationality || '',
+                r.country || r.nationality || '',
                 r.gender || '',
-                r.room || '',
-                r.booking || '',
-                r.risk || '',
+                r.roomNumber || r.room || '',
+                r.reservationDate || r.booking || '',
+                r.riskLevel || r.risk || '',
                 r.satisfaction || '',
                 chatIncluded,
-                r.total || 0,
-                ans.q1 || '', ans.q2 || '', ans.q3 || '', ans.q4 || '', ans.q5 || '',
-                ans.q6 || '', ans.q7 || '', ans.q8 || '', ans.q9 || '', ans.q10 || ''
+                r.totalScore || r.total || 0,
+                r.q1 || '', r.q2 || '', r.q3 || '', r.q4 || '', r.q5 || '',
+                r.q6 || '', r.q7 || '', r.q8 || '', r.q9 || '', r.q10 || ''
             ];
             csvContent += rowArr.join(',') + "\n";
         });
 
-        // Trigger Download Anchor
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `mindcare_counselor_data_${new Date().toISOString().split('T')[0]}.csv`);
+        link.setAttribute("download", `mindcare_full_data_${new Date().toISOString().split('T')[0]}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

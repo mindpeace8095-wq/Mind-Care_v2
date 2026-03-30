@@ -149,7 +149,8 @@
                 <h2 data-i18n="screeningTitle" class="assessment-title">SCREENING</h2>
                 <div class="screening-subtitle-wrapper">
                     <p data-i18n="screeningSubtitle" class="screening-subtitle"></p>
-                    <button type="button" id="instruction-speaker-btn" class="speaker-btn instruction-speaker hidden">🔊</button>
+                    <button type="button" id="instruction-speaker-btn"
+                        class="speaker-btn instruction-speaker hidden">🔊</button>
                 </div>
                 <div id="questions-list">
                     <!-- Rendered dynamically by JS -->
@@ -160,25 +161,33 @@
             <!-- Result & Booking Options -->
             <section id="result-section" class="result-container hidden">
                 <h2 data-i18n="resultTitle">결과 제출 완료</h2>
-                
+
                 <p data-i18n="resultDesc" class="result-desc">평가가 성공적으로 제출되었습니다.</p>
-                
+
                 <!-- YouTube Video Container for High Risk -->
-                <div id="youtube-video-container" class="hidden" style="margin: 25px 0; text-align: center; position: relative; z-index: 9999; display: block !important; min-height: 400px !important;">
-                    <p id="youtube-video-phrase" style="font-size: 1.1rem; font-weight: 500; color: #4a5568; margin-bottom: 15px; line-height: 1.5; z-index: 10000; position: relative;"></p>
-                    <div id="yt-player-wrapper" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10000;">
+                <div id="youtube-video-container" class="hidden"
+                    style="margin: 25px 0; text-align: center; position: relative; z-index: 9999; display: block !important; min-height: 400px !important;">
+                    <p id="youtube-video-phrase"
+                        style="font-size: 1.1rem; font-weight: 500; color: #4a5568; margin-bottom: 15px; line-height: 1.5; z-index: 10000; position: relative;">
+                    </p>
+                    <div id="yt-player-wrapper"
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10000;">
                         <!-- IFrame injected by JS -->
                     </div>
                 </div>
 
                 <!-- Dynamic Stability Guide Card -->
                 <div id="stability-guide" class="stability-card hidden" style="text-align: left; padding: 25px;">
-                    <h3 id="stability-title" class="stability-title" style="margin-bottom: 15px; text-align: center;"></h3>
-                    <p id="stability-desc" class="stability-desc-text" style="font-size: 1.05rem; line-height: 1.6; color: #4a5568; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px;"></p>
+                    <h3 id="stability-title" class="stability-title" style="margin-bottom: 15px; text-align: center;">
+                    </h3>
+                    <p id="stability-desc" class="stability-desc-text"
+                        style="font-size: 1.05rem; line-height: 1.6; color: #4a5568; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px;">
+                    </p>
                 </div>
 
                 <div class="result-actions">
-                    <button type="button" class="help-btn hidden" id="help-btn" data-i18n="helpBtnText">심리상담사에게 도움 요청하기 (HELP)</button>
+                    <button type="button" class="help-btn hidden" id="help-btn" data-i18n="helpBtnText">심리상담사에게 도움 요청하기
+                        (HELP)</button>
                     <button type="button" class="primary-btn" id="show-booking-btn" data-i18n="bookBtn">상담 예약하기</button>
                     <button type="button" class="secondary-btn" id="talk-btn" data-i18n="talkBtn">마음이와 대화하기</button>
                 </div>
@@ -191,7 +200,8 @@
                         <button type="button" class="emoji-btn" data-value="🙂" title="보통">🙂</button>
                         <button type="button" class="emoji-btn" data-value="😶" title="그저 그럼">😶</button>
                     </div>
-                    <p id="feedback-thanks" class="feedback-thanks hidden" data-i18n="feedbackThanks">평가해주셔서 감사합니다. 당신의 소중한 의견이 더 나은 마인드 케어를 만듭니다.</p>
+                    <p id="feedback-thanks" class="feedback-thanks hidden" data-i18n="feedbackThanks">평가해주셔서 감사합니다. 당신의
+                        소중한 의견이 더 나은 마인드 케어를 만듭니다.</p>
                     <p data-i18n="feedbackAnon" class="feedback-anon">이 평가는 익명으로 처리되며 오직 서비스 개선을 위해서만 사용됩니다.</p>
                 </div>
             </section>
@@ -235,7 +245,7 @@
     <!-- Toast message for success visually -->
     <div id="toast-message" class="hidden">Saved successfully!</div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=1.1"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -247,4 +257,4 @@
     </script>
 </body>
 
-</html>
+</html>최종 업데이트

@@ -597,14 +597,14 @@ const syncOfflineData = async () => {
     if (records.length === 0) return;
 
     console.log(`Syncing ${records.length} offline records...`);
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_YOUR_DUMMY_GAS_ID/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
 
     for (const record of records) {
         try {
             await fetch(scriptUrl, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(record)
             });
             // Remove from IndexedDB if sent (or even attempt sent with no-cors)
@@ -945,7 +945,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSuppressiveCulture = ['VN', 'UZ', 'CN', 'KR', 'RU'].includes(nationalityData);
             const isMale = genderData === '남성' || genderData === 'Male';
             const calibrationApplied = isSuppressiveCulture || isMale;
-            
+
             let effectiveScore = totalScore;
             if (calibrationApplied) {
                 effectiveScore += 5;
@@ -976,13 +976,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionId: currentSessionId,
                 date: new Date().toISOString().split('T')[0],
                 name: realNameData,
-                nationality: nationalityData,
+                country: nationalityData,
                 gender: genderData,
-                room: roomData,
-                booking: "",
+                roomNumber: roomData,
+                reservationDate: "",
                 calibrationApplied: calibrationApplied,
-                risk: riskLevel,
-                total: totalScore,
+                riskLevel: riskLevel,
+                totalScore: totalScore,
+                q1: answersObj['q1'] || 0, q2: answersObj['q2'] || 0, q3: answersObj['q3'] || 0,
+                q4: answersObj['q4'] || 0, q5: answersObj['q5'] || 0, q6: answersObj['q6'] || 0,
+                q7: answersObj['q7'] || 0, q8: answersObj['q8'] || 0, q9: answersObj['q9'] || 0,
+                q10: answersObj['q10'] || 0,
+                satisfaction: "",
+                chatSummary: "",
                 answers: answersObj,
                 timestamp: new Date().getTime()
             };
@@ -993,13 +999,13 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('mindcare_records', JSON.stringify(localData));
 
             // Fetch to Google Apps Script Template
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_YOUR_DUMMY_GAS_ID/exec';
-            
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
+
             if (navigator.onLine) {
                 fetch(scriptUrl, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(record)
                 }).catch(err => console.log('GAS Fetch error:', err));
             } else {
@@ -1039,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const videoContainer = document.getElementById('youtube-video-container');
             const videoPhrase = document.getElementById('youtube-video-phrase');
             const ytIframe = document.getElementById('yt-player-iframe');
-            
+
             let resultKey = 'resultGood';
             let showVideo = (riskLevel === "위험" || riskLevel === "고위험");
 
@@ -1077,31 +1083,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (ytWrapper && !document.getElementById('yt-player-iframe')) {
                     ytWrapper.innerHTML = '<iframe id="yt-player-iframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1001;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen src="https://www.youtube.com/embed/iGT6UxFT2CQ?rel=0&modestbranding=1&enablejsapi=1"></iframe>';
                 }
-                
+
                 // Set global unhandled callback just in case
-                window.onYouTubeIframeAPIReady = function() {
+                window.onYouTubeIframeAPIReady = function () {
                     if (window.YT && window.YT.Player && !window.ytPlayerObj) {
                         try {
                             window.ytPlayerObj = new YT.Player('yt-player-iframe', {
                                 events: {
-                                    'onStateChange': function(event) {
+                                    'onStateChange': function (event) {
                                         if (event.data == YT.PlayerState.PLAYING && !window.videoTracked) {
                                             window.videoTracked = true;
                                             const videoRecord = {
                                                 date: new Date().toISOString().split('T')[0],
                                                 name: realNameData || '알수없음',
-                                                nationality: nationalityData || 'ZZ',
+                                                country: nationalityData || 'ZZ',
                                                 gender: genderData || '기타',
-                                                room: roomData || '알수없음',
-                                                booking: 'VIDEO_WATCHED',
-                                                risk: riskLevel,
-                                                total: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
+                                                roomNumber: roomData || '알수없음',
+                                                reservationDate: 'VIDEO_WATCHED',
+                                                riskLevel: riskLevel,
+                                                totalScore: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
+                                                q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
                                                 answers: { video_watched: true },
                                                 timestamp: new Date().getTime()
                                             };
-                                            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_YOUR_DUMMY_GAS_ID/exec';
+                                            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
                                             if (navigator.onLine) {
-                                                fetch(scriptUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(videoRecord) }).catch(e => console.log(e));
+                                                fetch(scriptUrl, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(videoRecord) }).catch(e => console.log(e));
                                             } else {
                                                 saveToOffline(videoRecord);
                                             }
@@ -1109,7 +1116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     }
                                 }
                             });
-                        } catch(e) { console.error('YT API error:', e); }
+                        } catch (e) { console.error('YT API error:', e); }
                     }
                 };
 
@@ -1131,7 +1138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (riskLevel === "위험" || riskLevel === "고위험" || effectiveScore >= 31) {
                 const groupA = (answersObj['q4'] + answersObj['q5']) / 2; // 우울, 불안
                 const groupB = (answersObj['q6'] + answersObj['q7'] + answersObj['q10']) / 3; // 공격성, 스트레스, PTSD
-                
+
                 let title = '';
                 let desc = '';
 
@@ -1567,11 +1574,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeChatBtn.addEventListener('click', () => {
         chatWidget.classList.add('hidden');
-        
+
         // Save Chat History to Backend and Local DB
         if (completeChatHistory.length > 0 && currentSessionId) {
             const chatLogString = completeChatHistory.join('\n');
-            
+
             // 1. Update Local Storage for Dashboard
             let localData = JSON.parse(localStorage.getItem('mindcare_records') || '[]');
             const idx = localData.findIndex(r => r.sessionId === currentSessionId);
@@ -1586,20 +1593,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionId: currentSessionId,
                 date: new Date().toISOString().split('T')[0],
                 name: realNameData || '알수없음',
-                nationality: nationalityData || 'ZZ',
+                country: nationalityData || 'ZZ',
                 gender: genderData || '기타',
-                room: roomData || '알수없음',
-                booking: 'CHAT_LOG_UPDATE',
-                chatLog: chatLogString,
+                roomNumber: roomData || '알수없음',
+                reservationDate: 'CHAT_LOG_UPDATE',
+                chatSummary: chatLogString,
+                totalScore: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
+                q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
                 timestamp: new Date().getTime()
             };
 
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_YOUR_DUMMY_GAS_ID/exec';
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
             if (navigator.onLine) {
                 fetch(scriptUrl, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(chatRecord)
                 }).catch(err => console.log('GAS Fetch error:', err));
             }
@@ -1618,23 +1627,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const emergencyRecord = {
                 date: new Date().toISOString().split('T')[0],
                 name: realNameData || '알수없음',
-                nationality: nationalityData || 'ZZ',
+                country: nationalityData || 'ZZ',
                 gender: genderData || '기타',
-                room: roomData || '알수없음',
-                booking: 'URGENT_HELP_REQUEST',
-                risk: '고위험_긴급',
-                total: 0,
+                roomNumber: roomData || '알수없음',
+                reservationDate: 'URGENT_HELP_REQUEST',
+                riskLevel: '고위험_긴급',
+                totalScore: 0,
+                q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
                 answers: { urgent: true },
                 timestamp: new Date().getTime()
             };
 
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_YOUR_DUMMY_GAS_ID/exec';
-            
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
+
             if (navigator.onLine) {
                 fetch(scriptUrl, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(emergencyRecord)
                 }).catch(err => console.log('GAS Fetch error:', err));
             } else {
@@ -1657,7 +1667,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Highlight selected
             emojiBtns.forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-            
+
             // Show thanks
             if (feedbackThanks) feedbackThanks.classList.remove('hidden');
 
@@ -1668,13 +1678,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionId: currentSessionId,
                 date: new Date().toISOString().split('T')[0],
                 name: realNameData || 'Anonymous',
-                nationality: nationalityData || 'N/A',
+                country: nationalityData || 'N/A',
                 gender: genderData || 'N/A',
-                room: roomData || '알수없음',
-                booking: 'UX_FEEDBACK',
+                roomNumber: roomData || '알수없음',
+                reservationDate: 'UX_FEEDBACK',
                 satisfaction: selectedEmoji, // Store for User_Satisfaction column
-                risk: selectedEmoji, // Legacy compatibility
-                total: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
+                riskLevel: selectedEmoji, // Legacy compatibility
+                totalScore: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
+                q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
                 answers: { feedback: true },
                 timestamp: new Date().getTime()
             };
@@ -1690,13 +1701,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show '전송 완료' message via alert as requested by user
             alert(translations[currentLangCode]?.resultDesc || "전송 완료되었습니다.");
 
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_YOUR_DUMMY_GAS_ID/exec';
-            
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
+
             if (navigator.onLine) {
                 fetch(scriptUrl, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(feedbackRecord)
                 }).catch(err => console.log('GAS Fetch error:', err));
             } else {

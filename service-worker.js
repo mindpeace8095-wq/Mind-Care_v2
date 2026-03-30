@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mindcare-cache-v1';
+const CACHE_NAME = 'mindcare-cache-v2';
 const ASSETS_TO_CACHE = [
   'main_v2.html',
   'style.css',
