@@ -219,8 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const riskStyleAttr = isHighRiskRow ? 'class="high-risk"' : '';
-            const chatLogStr = encodeURIComponent(row.chatSummary || row.chatLog || '');
-            const hasChat = (row.chatSummary || row.chatLog);
+            const chatLogStr = encodeURIComponent(row.chatLog || row.chatSummary || ''); // Priority to chatLog
+            const hasChat = (row.chatLog || row.chatSummary);
 
             const chatBtnHtml = hasChat 
                 ? `<button class="primary-btn" style="padding: 4px 8px; font-size: 0.8rem; background: #4a5568; border: none; border-radius: 4px; color: white; cursor: pointer;" onclick="viewChatLog('${chatLogStr}')">내용 보기</button>` 
@@ -238,12 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td style="font-size: 1.2rem;">${row.satisfaction || '-'}</td>
                     <td>${chatBtnHtml}</td>
                     <td style="font-weight: bold;" ${riskStyleAttr}>${score}</td>
-                    <td>
-                        <button onclick="deleteRecord(${row.timestamp})" 
-                                style="padding: 4px 8px; font-size: 0.8rem; background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; border-radius: 4px; cursor: pointer;">
-                            삭제
-                        </button>
-                    </td>
                     <td>${row.q1 || '-'}</td>
                     <td>${row.q2 || '-'}</td>
                     <td style="${q3 >= 4 ? 'color: red; font-weight: bold;' : ''}">${row.q3 || '-'}</td>
@@ -254,6 +248,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td style="${q8 >= 4 ? 'color: red; font-weight: bold;' : ''}">${row.q8 || '-'}</td>
                     <td>${row.q9 || '-'}</td>
                     <td>${row.q10 || '-'}</td>
+                    <td>
+                        <button onclick="deleteRecord(${row.timestamp})" 
+                                style="padding: 4px 8px; font-size: 0.8rem; background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; border-radius: 4px; cursor: pointer;">
+                            삭제
+                        </button>
+                    </td>
                 </tr>
             `;
         }).join('');
@@ -275,10 +275,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // UTF-8 BOM
-        csvContent += "날짜,이름,국적,성별,보호실번호,예약요일,위험군,만족도기호,대화내역유무,심리총점,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10\n";
+        csvContent += "날짜,이름,국적,성별,보호실번호,예약일,위험군,만족도(UX),대화내용,총점,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10\n";
 
         currentDashboardData.forEach(r => {
-            const chatIncluded = (r.chatSummary || r.chatLog) ? 'Yes' : 'No';
+            const chatIncluded = (r.chatLog || r.chatSummary) ? 'Yes' : 'No';
             const rowArr = [
                 r.date || '',
                 (r.name || '').replace(/,/g, ''),

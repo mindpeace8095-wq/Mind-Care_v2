@@ -36,6 +36,8 @@ const translations = {
         bookingTitle: "상담 예약 (오후 2시)", bookingDesc: "상담을 원하는 요일을 선택해주세요.",
         closeBtn: "닫기", bookedToast: "예약되었습니다.",
         mon: "월요일", tue: "화요일", thu: "목요일", fri: "금요일", at2pm: "오후 2:00",
+        genderLabel: "성별 (Gender)", genderPlaceholder: "선택해주세요",
+        genderMale: "남성 (Male)", genderFemale: "여성 (Female)", genderOther: "기타 (Other)",
         wardSelectLabel: "보호실 선택", maleWard: "남자보호실", femaleWard: "여자보호실",
         roomSetupTitle: "기기 위치 설정", roomNumberLabel: "보호실 번호",
         resultGood: "마음의 날씨가 맑음이네요! 스스로를 잘 돌보고 있는 당신이 자랑스러워요. 오늘도 평온한 하루 되세요.",
@@ -98,6 +100,8 @@ const translations = {
         bookingTitle: "Book Consultation", bookingDesc: "Please select a day for consultation.",
         closeBtn: "Close", bookedToast: "Successfully booked.",
         mon: "Monday", tue: "Tuesday", thu: "Thursday", fri: "Friday", at2pm: "2:00 PM",
+        genderLabel: "Gender", genderPlaceholder: "Select Gender",
+        genderMale: "Male", genderFemale: "Female", genderOther: "Other",
         wardSelectLabel: "Select Room", maleWard: "Male Room", femaleWard: "Female Room",
         roomSetupTitle: "Device Location Setup", roomNumberLabel: "Room Number",
         resultGood: "Your mind's weather is clear! I'm proud of you for taking good care of yourself. Have a peaceful day today.",
@@ -160,6 +164,8 @@ const translations = {
         bookingTitle: "预约咨询", bookingDesc: "请选择咨询的日期。",
         closeBtn: "关闭", bookedToast: "预约成功。",
         mon: "星期一", tue: "星期二", thu: "星期四", fri: "星期五", at2pm: "下午 2:00",
+        genderLabel: "性别 (Gender)", genderPlaceholder: "请选择",
+        genderMale: "男性 (Male)", genderFemale: "女性 (Female)", genderOther: "其他 (Other)",
         wardSelectLabel: "选择房间", maleWard: "男病房", femaleWard: "女病房",
         roomSetupTitle: "设备位置设置", roomNumberLabel: "房间号",
         resultGood: "您内心的天气很晴朗！很高兴看到您如此关爱自己。祝您今天也有个平静的一天。",
@@ -222,6 +228,8 @@ const translations = {
         bookingTitle: "Đặt lịch tư vấn", bookingDesc: "Vui lòng chọn ngày tư vấn.",
         closeBtn: "Đóng", bookedToast: "Đã đặt lịch thành công.",
         mon: "Thứ Hai", tue: "Thứ Ba", thu: "Thứ Năm", fri: "Thứ Sáu", at2pm: "2:00 Chiều",
+        genderLabel: "Giới tính (Gender)", genderPlaceholder: "Vui lòng chọn",
+        genderMale: "Nam (Male)", genderFemale: "Nữ (Female)", genderOther: "Khác (Other)",
         wardSelectLabel: "Chọn phòng", maleWard: "Phòng Nam", femaleWard: "Phòng Nữ",
         roomSetupTitle: "Thiết lập vị trí thiết bị", roomNumberLabel: "Số phòng",
         resultGood: "Thời tiết trong tâm trí bạn thật trong xanh! Tôi rất tự hào vì bạn đã chăm sóc tốt cho bản thân. Chúc bạn một ngày bình yên.",
@@ -284,6 +292,8 @@ const translations = {
         bookingTitle: "حجز استشارة", bookingDesc: "الرجاء تحديد يوم للاستشارة.",
         closeBtn: "إغلاق", bookedToast: "تم الحجز بنجاح.",
         mon: "الاثنين", tue: "الثلاثاء", thu: "الخميس", fri: "الجمعة", at2pm: "2:00 مساءً",
+        genderLabel: "الجنس (Gender)", genderPlaceholder: "يرجى الاختيار",
+        genderMale: "ذكر (Male)", genderFemale: "أنثى (Female)", genderOther: "آخر (Other)",
         wardSelectLabel: "اختر الغرفة", maleWard: "غرفة الرجال", femaleWard: "غرفة النساء",
         roomSetupTitle: "إعداد موقع الجهاز", roomNumberLabel: "رقم الغرفة",
         resultGood: "طقس عقلك صافٍ! من الرائع رؤيتك تعتني بنفسك جيدًا. يتمنى لك Maeum-i يومًا هادئًا.",
@@ -343,6 +353,8 @@ const translations = {
         bookingTitle: "นัดหมายการให้คำปรึกษา", bookingDesc: "โปรดเลือกวันให้คำปรึกษา",
         closeBtn: "ปิด", bookedToast: "จองสำเร็จแล้ว",
         mon: "วันจันทร์", tue: "วันอังคาร", thu: "วันพฤหัสบดี", fri: "วันศุกร์", at2pm: "14:00",
+        genderLabel: "เพศ (Gender)", genderPlaceholder: "โปรดเลือก",
+        genderMale: "ชาย (Male)", genderFemale: "หญิง (Female)", genderOther: "อื่นๆ (Other)",
         wardSelectLabel: "เลือกห้อง", maleWard: "ห้องผู้ชาย", femaleWard: "ห้องผู้หญิง",
         roomSetupTitle: "ตั้งค่าตำแหน่งอุปกรณ์", roomNumberLabel: "หมายเลขห้อง",
         resultGood: "สภาพจิตใจของคุณสดใส! ฉันภูมิใจที่คุณดูแลตัวเองได้ดี ขอให้วันนี้เป็นวันที่สงบสุข",
@@ -405,6 +417,8 @@ const translations = {
         bookingTitle: "Запись на консультацию", bookingDesc: "Пожалуйста, выберите день.",
         closeBtn: "Закрыть", bookedToast: "Успешно забронировано.",
         mon: "Понедельник", tue: "Вторник", thu: "Четверг", fri: "Пятница", at2pm: "14:00",
+        genderLabel: "Пол (Gender)", genderPlaceholder: "Выберите",
+        genderMale: "Мужской (Male)", genderFemale: "Женский (Female)", genderOther: "Другое (Other)",
         wardSelectLabel: "Выбор комнаты", maleWard: "Мужская палата", femaleWard: "Женская палата",
         roomSetupTitle: "Настройка местоположения устройства", roomNumberLabel: "Номер комнаты",
         resultGood: "Погода в вашей душе ясная! Я горжусь тем, что вы хорошо заботитесь о себе. Желаю вам мирного дня сегодня.",
@@ -467,6 +481,8 @@ const translations = {
         bookingTitle: "Konsultatsiyani band qilish", bookingDesc: "Iltimos, kunni tanlang.",
         closeBtn: "Yopish", bookedToast: "Muvaffaqiyatli band qilindi.",
         mon: "Dushanba", tue: "Seshanba", thu: "Payshanba", fri: "Juma", at2pm: "14:00",
+        genderLabel: "Jinsi (Gender)", genderPlaceholder: "Tanlang",
+        genderMale: "Erkak (Male)", genderFemale: "Ayol (Female)", genderOther: "Boshqa (Other)",
         wardSelectLabel: "Xonani tanlash", maleWard: "Erkaklar xonasi", femaleWard: "Ayollar xonasi",
         roomSetupTitle: "Qurilma joylashuvini sozlash", roomNumberLabel: "Xona raqami",
         resultGood: "Qalbingiz ob-havosi ochiq! O'zingizga yaxshi g'amxo'rlik qilayotganingiz bilan faxrlanaman. Bugun sizga tinch kun tilayman.",
@@ -1027,15 +1043,19 @@ document.addEventListener('DOMContentLoaded', () => {
             screeningSection.style.display = 'none';
             resultSection.classList.remove('hidden');
 
-            // Show Feedback Section
+            // Hide Feedback Section for High Risk / Risk (as requested to simplify UI)
             const feedbackSection = document.getElementById('feedback-section');
             if (feedbackSection) {
-                feedbackSection.classList.remove('hidden');
-                // Reset UI in case of multiple submissions
-                const emojiBtns = document.querySelectorAll('.emoji-btn');
-                const feedbackThanks = document.getElementById('feedback-thanks');
-                emojiBtns.forEach(btn => btn.classList.remove('selected'));
-                if (feedbackThanks) feedbackThanks.classList.add('hidden');
+                if (riskLevel === "고위험" || riskLevel === "위험") {
+                    feedbackSection.classList.add('hidden');
+                } else {
+                    feedbackSection.classList.remove('hidden');
+                    // Reset UI in case of multiple submissions
+                    const emojiBtns = document.querySelectorAll('.emoji-btn');
+                    const feedbackThanks = document.getElementById('feedback-thanks');
+                    emojiBtns.forEach(btn => btn.classList.remove('selected'));
+                    if (feedbackThanks) feedbackThanks.classList.add('hidden');
+                }
             }
 
             // Set dynamic message & styling
@@ -1099,11 +1119,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 country: nationalityData || 'ZZ',
                                                 gender: genderData || '기타',
                                                 roomNumber: roomData || '알수없음',
-                                                reservationDate: 'VIDEO_WATCHED',
+                                                reservationDate: '', // Clear to prevent pollution
                                                 riskLevel: riskLevel,
+                                                recordType: 'VIDEO_WATCHED', // Add record type instead
                                                 totalScore: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
                                                 q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
-                                                answers: { video_watched: true },
+                                                chatLog: '', // ensure field exists
                                                 timestamp: new Date().getTime()
                                             };
                                             const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
@@ -1243,10 +1264,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Add Booking Info to last Assessment Record
                 const dict = translations[currentLangCode];
+                const bookingInfo = `${dict[chosenDay]} ${dict.at2pm}`;
                 let records = JSON.parse(localStorage.getItem('mindcare_records') || '[]');
                 if (records.length > 0) {
-                    records[records.length - 1].booking = `${dict[chosenDay]} ${dict.at2pm}`;
+                    records[records.length - 1].booking = bookingInfo;
+                    records[records.length - 1].reservationDate = bookingInfo; // Ensure local consistency
                     localStorage.setItem('mindcare_records', JSON.stringify(records));
+                }
+
+                // Immediate Sync to GAS for Booking (Fixing missing sync)
+                const bookingRecord = {
+                    sessionId: currentSessionId,
+                    date: new Date().toISOString().split('T')[0],
+                    name: realNameData || '알수없음',
+                    country: nationalityData || 'ZZ',
+                    gender: genderData || '기타',
+                    roomNumber: roomData || '알수없음',
+                    reservationDate: bookingInfo, // Actual booking info
+                    riskLevel: globalRiskLevel || 'N/A',
+                    recordType: 'BOOKING',
+                    totalScore: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
+                    q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
+                    chatLog: '', // Empty for booking record
+                    timestamp: new Date().getTime()
+                };
+
+                if (navigator.onLine) {
+                    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx4lpkEAylkMU5Vm3w-SNnW0K25cqWIshm62vZtFMvtb1SkSIbpEYyK7XHmGb_ZRsu4LQ/exec';
+                    fetch(scriptUrl, { 
+                        method: 'POST', 
+                        mode: 'cors', 
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                        body: JSON.stringify(bookingRecord) 
+                    }).catch(e => console.log('Booking Sync error:', e));
+                } else {
+                    saveToOffline(bookingRecord);
                 }
 
                 // Show localized success toast
@@ -1596,8 +1648,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 country: nationalityData || 'ZZ',
                 gender: genderData || '기타',
                 roomNumber: roomData || '알수없음',
-                reservationDate: 'CHAT_LOG_UPDATE',
-                chatSummary: chatLogString,
+                reservationDate: '', // Clear to prevent pollution in 'Reservation Date' column
+                recordType: 'CHAT_LOG_UPDATE',
+                chatLog: chatLogString, // Map to chatLog instead of chatSummary
                 totalScore: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
                 q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
                 timestamp: new Date().getTime()
@@ -1630,11 +1683,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 country: nationalityData || 'ZZ',
                 gender: genderData || '기타',
                 roomNumber: roomData || '알수없음',
-                reservationDate: 'URGENT_HELP_REQUEST',
+                reservationDate: '', // Clear to prevent pollution
                 riskLevel: '고위험_긴급',
+                recordType: 'URGENT_HELP_REQUEST',
                 totalScore: 0,
                 q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
-                answers: { urgent: true },
+                chatLog: '', 
                 timestamp: new Date().getTime()
             };
 
@@ -1681,12 +1735,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 country: nationalityData || 'N/A',
                 gender: genderData || 'N/A',
                 roomNumber: roomData || '알수없음',
-                reservationDate: 'UX_FEEDBACK',
+                reservationDate: '', // Clear to prevent pollution
                 satisfaction: selectedEmoji, // Store for User_Satisfaction column
                 riskLevel: selectedEmoji, // Legacy compatibility
+                recordType: 'UX_FEEDBACK',
                 totalScore: typeof currentTotalScore !== 'undefined' ? currentTotalScore : 0,
                 q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
-                answers: { feedback: true },
+                chatLog: '',
                 timestamp: new Date().getTime()
             };
 
